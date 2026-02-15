@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+
+<article class="max-w-3xl mx-auto px-4">
+
+    <h1 class="text-3xl md:text-4xl font-semibold text-emerald-800 mb-6 text-center">
+        {{ post.title }}
+    </h1>
+
+    {% if post.featured_image %}
+        <img src="{{ post.featured_image.url }}" class="rounded-2xl mb-8 w-full shadow-md object-cover">
+    {% endif %}
+
+    <div class="space-y-6 text-stone-700 leading-relaxed text-lg">
+        {{ post.content|linebreaks }}
+    </div>
+
+    {% if post.affiliate_link %}
+        <div class="mt-10 p-6 bg-emerald-50 rounded-2xl text-center shadow-inner">
+            <p class="text-sm text-stone-600 mb-4">
+                This post contains affiliate links.
+            </p>
+            <a href="{{ post.affiliate_link }}" target="_blank"
+               class="inline-block bg-emerald-700 text-white px-6 py-3 rounded-xl hover:bg-emerald-800 transition">
+                View Product
+            </a>
+        </div>
+    {% endif %}
+
+</article>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+
+<section class="text-center mb-16 px-4">
+    <h1 class="text-3xl md:text-4xl font-semibold text-emerald-800 mb-10">
+        {{ category.name }}
+    </h1>
+</section>
+
+<section class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 px-4">
+    {% for post in posts %}
+        <article class="bg-white border border-stone-200 rounded-2xl shadow-md p-6 hover:shadow-lg transition transform hover:-translate-y-0.5">
+            {% if post.featured_image %}
+                <img src="{{ post.featured_image.url }}" class="rounded-xl mb-4 w-full h-48 object-cover">
+            {% endif %}
+            <h2 class="text-xl font-medium mb-2 text-stone-800">
+                <a href="{{ post.get_absolute_url }}" class="hover:text-emerald-600">
+                    {{ post.title }}
+                </a>
+            </h2>
+            <p class="text-base text-stone-700 leading-relaxed">
+                {{ post.excerpt }}
+            </p>
+        </article>
+    {% empty %}
+        <p class="col-span-full text-center text-stone-500">
+            No posts available in this category yet.
+        </p>
+    {% endfor %}
+</section>
+
+{% endblock %}

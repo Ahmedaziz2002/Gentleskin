@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Gentle Skin for Sensitive & Eczema-Prone Skin{% endblock %}
+
+{% block content %}
+
+<section class="text-center mb-16 px-4">
+    <h1 class="text-4xl md:text-5xl font-semibold text-emerald-800 mb-6">
+        Gentle Skincare for Sensitive & Eczema-Prone Skin
+    </h1>
+    <p class="max-w-2xl mx-auto text-lg text-stone-700 leading-relaxed">
+        Discover simple and soothing skincare routines along with carefully chosen product recommendations for dry, sensitive, and eczema-prone skin. Everything we share is designed to make caring for your skin calm and effortless.
+    </p>
+</section>
+
+<section class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    {% for post in posts %}
+        <article class="bg-white border border-stone-200 rounded-2xl shadow-md p-6 hover:shadow-lg transition transform hover:-translate-y-0.5">
+            {% if post.featured_image %}
+                <img src="{{ post.featured_image.url }}" class="rounded-xl mb-4 w-full h-48 object-cover">
+            {% endif %}
+            <h2 class="text-xl font-medium mb-2 text-stone-800">
+                <a href="{{ post.get_absolute_url }}" class="hover:text-emerald-600">
+                    {{ post.title }}
+                </a>
+            </h2>
+            <p class="text-base text-stone-700 leading-relaxed">
+                {{ post.excerpt }}
+            </p>
+        </article>
+    {% empty %}
+        <p class="col-span-full text-center text-stone-500">
+            No posts have been published yet. Check back soon for gentle skincare tips and product guides.
+        </p>
+    {% endfor %}
+</section>
+
+{% if posts.paginator.num_pages > 1 %}
+<div class="mt-16 flex justify-center items-center space-x-3 px-4">
+
+    {% if posts.has_previous %}
+        <a href="?page={{ posts.previous_page_number }}"
+           class="px-4 py-2 bg-white border border-stone-200 rounded-xl shadow-sm text-sm hover:bg-emerald-50 transition">
+            Previous
+        </a>
+    {% endif %}
+
+    <span class="text-sm text-stone-500">
+        Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+    </span>
+
+    {% if posts.has_next %}
+        <a href="?page={{ posts.next_page_number }}"
+           class="px-4 py-2 bg-white border border-stone-200 rounded-xl shadow-sm text-sm hover:bg-emerald-50 transition">
+            Next
+        </a>
+    {% endif %}
+
+</div>
+{% endif %}
+
+{% endblock %}
