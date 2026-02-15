@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput && python manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('ahmed', 'ahmed@example.com', 'ahmed123')" && gunicorn core.wsgi
+web: gunicorn core.wsgi
