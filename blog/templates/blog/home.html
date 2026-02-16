@@ -1,161 +1,62 @@
-{% load static %}
-{% load tailwind_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Gentle Skin Routine{% endblock %}</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+{% block title %}Gentle Skin for Sensitive & Eczema-Prone Skin{% endblock %}
 
-    <meta name="description" content="{% block description %}Evidence-based skincare guidance focused on barrier health and gentle routines.{% endblock %}">
-    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+{% block content %}
 
-    <meta property="og:title" content="{% block og_title %}Gentle Skin{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Skincare routines that protect and support your skin barrier.{% endblock %}">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+<section class="text-center mb-16 px-4">
+    <h1 class="text-4xl md:text-5xl font-semibold text-emerald-800 mb-6">
+        Gentle Skincare for Sensitive & Eczema-Prone Skin
+    </h1>
+    <p class="max-w-2xl mx-auto text-lg text-stone-700 leading-relaxed">
+        Discover simple and soothing skincare routines along with carefully chosen product recommendations for dry, sensitive, and eczema-prone skin. Everything we share is designed to make caring for your skin calm and effortless.
+    </p>
+</section>
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}Gentle Skin{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}Calm, protect, strengthen your skin barrier.{% endblock %}">
-
-    {% tailwind_css %}
-</head>
-
-<body class="bg-stone-50 text-stone-800 font-sans antialiased">
-
-    <!-- HEADER / NAVBAR -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-
-            <div class="flex items-center justify-between">
-
-                <!-- Logo -->
-                <a href="/" 
-                   class="text-2xl sm:text-3xl font-serif font-extrabold text-emerald-700 tracking-tight">
-                    Gentle Skin Routine
+<section class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    {% for post in posts %}
+        <article class="bg-white border border-stone-200 rounded-2xl shadow-md p-6 hover:shadow-lg transition transform hover:-translate-y-0.5">
+            {% if post.featured_image %}
+                <img src="{{ post.featured_image.url }}" class="rounded-xl mb-4 w-full h-48 object-cover">
+            {% endif %}
+            <h2 class="text-xl font-medium mb-2 text-stone-800">
+                <a href="{{ post.get_absolute_url }}" class="hover:text-emerald-600">
+                    {{ post.title }}
                 </a>
-
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex items-center gap-6 text-sm sm:text-base">
-                    <a href="/"
-                       class="transition hover:text-emerald-600
-                       {% if request.path == '/' %} text-emerald-600 font-semibold {% endif %}">
-                        Home
-                    </a>
-                    <a href="/about/"
-                       class="transition hover:text-emerald-600
-                       {% if request.path == '/about/' %} text-emerald-600 font-semibold {% endif %}">
-                        About
-                    </a>
-
-                    {% for category in categories %}
-                        <a href="{% url 'category_posts' category.slug %}"
-                           class="transition hover:text-emerald-600
-                           {% if request.path == category.get_absolute_url %} text-emerald-600 font-semibold {% endif %}">
-                            {{ category.name }}
-                        </a>
-                    {% endfor %}
-                </nav>
-
-                <!-- Mobile Hamburger -->
-                <button id="menu-btn" class="md:hidden focus:outline-none">
-                    <svg class="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
-
-            </div>
-
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 flex flex-col space-y-2 text-sm">
-                <a href="/"
-                   class="px-3 py-2 rounded-md transition hover:bg-emerald-50
-                   {% if request.path == '/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
-                    Home
-                </a>
-                <a href="/about/"
-                   class="px-3 py-2 rounded-md transition hover:bg-emerald-50
-                   {% if request.path == '/about/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
-                    About
-                </a>
-
-                {% for category in categories %}
-                    <a href="{% url 'category_posts' category.slug %}"
-                       class="px-3 py-2 rounded-md transition hover:bg-emerald-50
-                       {% if request.path == category.get_absolute_url %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
-                        {{ category.name }}
-                    </a>
-                {% endfor %}
-            </div>
-
-        </div>
-    </header>
-
-    <!-- MAIN CONTENT -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        {% block content %}{% endblock %}
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-white border-t mt-12 sm:mt-16">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-sm text-stone-600 space-y-4">
-
-            <p>
-                Some of the links on this website are affiliate links. If you choose to buy through these links, we may earn a small commission. This comes at no extra cost to you.
+            </h2>
+            <p class="text-base text-stone-700 leading-relaxed">
+                {{ post.excerpt }}
             </p>
+        </article>
+    {% empty %}
+        <p class="col-span-full text-center text-stone-500">
+            No posts have been published yet. Check back soon for gentle skincare tips and product guides.
+        </p>
+    {% endfor %}
+</section>
 
-            <p>
-                All content is educational and not a substitute for professional medical advice.
-            </p>
+{% if posts.paginator.num_pages > 1 %}
+<div class="mt-16 flex justify-center items-center space-x-3 px-4">
 
-            <!-- Privacy Policy Link -->
-            <p>
-                <a href="{% url 'privacy' %}" class="underline hover:text-emerald-600">Privacy Policy</a>
-            </p>
+    {% if posts.has_previous %}
+        <a href="?page={{ posts.previous_page_number }}"
+           class="px-4 py-2 bg-white border border-stone-200 rounded-xl shadow-sm text-sm hover:bg-emerald-50 transition">
+            Previous
+        </a>
+    {% endif %}
 
-            <p class="text-stone-400 text-xs sm:text-sm">
-                © {% now "Y" %} Gentle Skin Routine
-            </p>
+    <span class="text-sm text-stone-500">
+        Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+    </span>
 
-        </div>
-    </footer>
+    {% if posts.has_next %}
+        <a href="?page={{ posts.next_page_number }}"
+           class="px-4 py-2 bg-white border border-stone-200 rounded-xl shadow-sm text-sm hover:bg-emerald-50 transition">
+            Next
+        </a>
+    {% endif %}
 
-    <!-- Hamburger Toggle Script -->
-    <script>
-        const btn = document.getElementById('menu-btn');
-        const menu = document.getElementById('mobile-menu');
+</div>
+{% endif %}
 
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-    </script>
-
-    <!-- Cookie Banner Script -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            if (!localStorage.getItem("cookie_consent")) {
-                const banner = document.createElement("div");
-                banner.innerHTML = `
-                    <div style="position:fixed;bottom:0;width:100%;background:#065f46;color:white;padding:15px;text-align:center;z-index:9999;">
-                        This website uses cookies to improve performance and track affiliate links.
-                        <button id="acceptCookies" style="margin-left:15px;padding:6px 12px;background:white;color:#065f46;border:none;border-radius:6px;">
-                            Accept
-                        </button>
-                    </div>
-                `;
-                document.body.appendChild(banner);
-
-                document.getElementById("acceptCookies").onclick = function() {
-                    localStorage.setItem("cookie_consent", "true");
-                    banner.remove();
-                };
-            }
-        });
-    </script>
-
-</body>
-</html>
+{% endblock %}
