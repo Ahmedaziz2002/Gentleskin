@@ -48,7 +48,7 @@
         </a>
         {% for category in categories %}
             <a href="{% url 'category_posts' category.slug %}"
-               class="transition hover:text-emerald-600 {% if request.path == category.get_absolute_url %} text-emerald-600 font-semibold {% endif %}">
+               class="ml-4 transition hover:text-emerald-600 {% if request.path == category.get_absolute_url %} text-emerald-600 font-semibold {% endif %}">
                 {{ category.name }}
             </a>
         {% endfor %}
