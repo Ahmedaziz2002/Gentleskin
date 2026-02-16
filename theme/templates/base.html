@@ -26,135 +26,124 @@
 
 <body class="bg-stone-50 text-stone-800 font-sans antialiased">
 
-    <!-- HEADER / NAVBAR -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+<!-- HEADER / NAVBAR -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
 
-            <div class="flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" 
+       class="text-2xl sm:text-3xl font-serif font-extrabold text-emerald-700 tracking-tight">
+        Gentle Skin Routine
+    </a>
 
-                <!-- Logo -->
-                <a href="/" 
-                   class="text-2xl sm:text-3xl font-serif font-extrabold text-emerald-700 tracking-tight">
-                    Gentle Skin Routine
-                </a>
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:flex items-center gap-6 text-sm sm:text-base">
+        <a href="/"
+           class="transition hover:text-emerald-600 {% if request.path == '/' %} text-emerald-600 font-semibold {% endif %}">
+            Home
+        </a>
+        <a href="/about/"
+           class="transition hover:text-emerald-600 {% if request.path == '/about/' %} text-emerald-600 font-semibold {% endif %}">
+            About
+        </a>
+        {% for category in categories %}
+            <a href="{% url 'category_posts' category.slug %}"
+               class="transition hover:text-emerald-600 {% if request.path == category.get_absolute_url %} text-emerald-600 font-semibold {% endif %}">
+                {{ category.name }}
+            </a>
+        {% endfor %}
+    </nav>
 
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex items-center gap-6 text-sm sm:text-base">
-                    <a href="/"
-                       class="transition hover:text-emerald-600
-                       {% if request.path == '/' %} text-emerald-600 font-semibold {% endif %}">
-                        Home
-                    </a>
-                    <a href="/about/"
-                       class="transition hover:text-emerald-600
-                       {% if request.path == '/about/' %} text-emerald-600 font-semibold {% endif %}">
-                        About
-                    </a>
+    <!-- Mobile Hamburger -->
+    <div class="md:hidden flex items-center">
+        <button id="menu-btn" class="focus:outline-none">
+            <svg class="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+    </div>
+  </div>
 
-                    {% for category in categories %}
-                        <a href="{% url 'category_posts' category.slug %}"
-                           class="transition hover:text-emerald-600
-                           {% if request.path == category.get_absolute_url %} text-emerald-600 font-semibold {% endif %}">
-                            {{ category.name }}
-                        </a>
-                    {% endfor %}
-                </nav>
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 flex flex-col space-y-2 bg-white border-t">
+    <a href="/"
+       class="px-3 py-2 rounded-md transition hover:bg-emerald-50 {% if request.path == '/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
+        Home
+    </a>
+    <a href="/about/"
+       class="px-3 py-2 rounded-md transition hover:bg-emerald-50 {% if request.path == '/about/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
+        About
+    </a>
+    {% for category in categories %}
+        <a href="{% url 'category_posts' category.slug %}"
+           class="px-3 py-2 rounded-md transition hover:bg-emerald-50 {% if request.path == category.get_absolute_url %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
+            {{ category.name }}
+        </a>
+    {% endfor %}
+  </div>
 
-                <!-- Mobile Hamburger -->
-                <button id="menu-btn" class="md:hidden focus:outline-none">
-                    <svg class="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
+  <!-- Hamburger Toggle Script -->
+  <script>
+    const btn = document.getElementById('menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  </script>
+</header>
 
-            </div>
+<!-- MAIN CONTENT -->
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+    {% block content %}{% endblock %}
+</main>
 
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 flex flex-col space-y-2 text-sm">
-                <a href="/"
-                   class="px-3 py-2 rounded-md transition hover:bg-emerald-50
-                   {% if request.path == '/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
-                    Home
-                </a>
-                <a href="/about/"
-                   class="px-3 py-2 rounded-md transition hover:bg-emerald-50
-                   {% if request.path == '/about/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
-                    About
-                </a>
-                {% for category in categories %}
-                    <a href="{% url 'category_posts' category.slug %}"
-                       class="px-3 py-2 rounded-md transition hover:bg-emerald-50
-                       {% if request.path == category.get_absolute_url %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
-                        {{ category.name }}
-                    </a>
-                {% endfor %}
-            </div>
+<!-- FOOTER -->
+<footer class="bg-white border-t mt-12 sm:mt-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-sm text-stone-600 space-y-4">
 
-        </div>
-    </header>
+    <p>
+      Some of the links on this website are affiliate links. If you choose to buy through these links, we may earn a small commission. This comes at no extra cost to you.
+    </p>
 
-    <!-- MAIN CONTENT -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        {% block content %}{% endblock %}
-    </main>
+    <p>
+      All content is educational and not a substitute for professional medical advice.
+    </p>
 
-    <!-- FOOTER -->
-    <footer class="bg-white border-t mt-12 sm:mt-16">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-sm text-stone-600 space-y-4">
+    <!-- Privacy Policy Link -->
+    <p>
+      <a href="{% url 'privacy' %}" class="underline hover:text-emerald-600">Privacy Policy</a>
+    </p>
 
-            <p>
-                Some of the links on this website are affiliate links. If you choose to buy through these links, we may earn a small commission. This comes at no extra cost to you.
-            </p>
+    <p class="text-stone-400 text-xs sm:text-sm">
+      © {% now "Y" %} Gentle Skin Routine
+    </p>
 
-            <p>
-                All content is educational and not a substitute for professional medical advice.
-            </p>
+  </div>
+</footer>
 
-            <!-- Privacy Policy Link -->
-            <p>
-                <a href="{% url 'privacy' %}" class="underline hover:text-emerald-600">Privacy Policy</a>
-            </p>
+<!-- Cookie Consent Banner Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!localStorage.getItem("cookie_consent")) {
+            const banner = document.createElement("div");
+            banner.innerHTML = `
+                <div class="fixed bottom-0 w-full bg-emerald-700 text-white p-4 text-center z-50 flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <span>This website uses cookies to improve performance and track affiliate links.</span>
+                    <button id="acceptCookies" class="px-4 py-2 bg-white text-emerald-700 rounded-lg hover:bg-gray-100 transition">
+                        Accept
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(banner);
 
-            <p class="text-stone-400 text-xs sm:text-sm">
-                © {% now "Y" %} Gentle Skin Routine
-            </p>
-
-        </div>
-    </footer>
-
-    <!-- Hamburger Toggle Script -->
-    <script>
-        const btn = document.getElementById('menu-btn');
-        const menu = document.getElementById('mobile-menu');
-
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-    </script>
-
-    <!-- Cookie Consent Banner Script -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            if (!localStorage.getItem("cookie_consent")) {
-                const banner = document.createElement("div");
-                banner.innerHTML = `
-                    <div class="fixed bottom-0 w-full bg-emerald-700 text-white p-4 text-center z-50 flex flex-col sm:flex-row justify-center items-center gap-4">
-                        <span>This website uses cookies to improve performance and track affiliate links.</span>
-                        <button id="acceptCookies" class="px-4 py-2 bg-white text-emerald-700 rounded-lg hover:bg-gray-100 transition">
-                            Accept
-                        </button>
-                    </div>
-                `;
-                document.body.appendChild(banner);
-
-                document.getElementById("acceptCookies").onclick = function() {
-                    localStorage.setItem("cookie_consent", "true");
-                    banner.remove();
-                };
-            }
-        });
-    </script>
+            document.getElementById("acceptCookies").onclick = function() {
+                localStorage.setItem("cookie_consent", "true");
+                banner.remove();
+            };
+        }
+    });
+</script>
 
 </body>
 </html>
