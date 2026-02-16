@@ -26,10 +26,71 @@
 
 <body class="bg-stone-50 text-stone-800 font-sans antialiased">
 
-    <!-- HEADER -->
+    <!-- HEADER / NAVBAR -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <!-- ... existing header content ... -->
+
+            <div class="flex items-center justify-between">
+
+                <!-- Logo -->
+                <a href="/" 
+                   class="text-2xl sm:text-3xl font-serif font-extrabold text-emerald-700 tracking-tight">
+                    Gentle Skin Routine
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center gap-6 text-sm sm:text-base">
+                    <a href="/"
+                       class="transition hover:text-emerald-600
+                       {% if request.path == '/' %} text-emerald-600 font-semibold {% endif %}">
+                        Home
+                    </a>
+                    <a href="/about/"
+                       class="transition hover:text-emerald-600
+                       {% if request.path == '/about/' %} text-emerald-600 font-semibold {% endif %}">
+                        About
+                    </a>
+
+                    {% for category in categories %}
+                        <a href="{% url 'category_posts' category.slug %}"
+                           class="transition hover:text-emerald-600
+                           {% if request.path == category.get_absolute_url %} text-emerald-600 font-semibold {% endif %}">
+                            {{ category.name }}
+                        </a>
+                    {% endfor %}
+                </nav>
+
+                <!-- Mobile Hamburger -->
+                <button id="menu-btn" class="md:hidden focus:outline-none">
+                    <svg class="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 flex flex-col space-y-2 text-sm">
+                <a href="/"
+                   class="px-3 py-2 rounded-md transition hover:bg-emerald-50
+                   {% if request.path == '/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
+                    Home
+                </a>
+                <a href="/about/"
+                   class="px-3 py-2 rounded-md transition hover:bg-emerald-50
+                   {% if request.path == '/about/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
+                    About
+                </a>
+                {% for category in categories %}
+                    <a href="{% url 'category_posts' category.slug %}"
+                       class="px-3 py-2 rounded-md transition hover:bg-emerald-50
+                       {% if request.path == category.get_absolute_url %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
+                        {{ category.name }}
+                    </a>
+                {% endfor %}
+            </div>
+
         </div>
     </header>
 
@@ -72,15 +133,15 @@
         });
     </script>
 
-    <!-- Cookie Banner Script -->
+    <!-- Cookie Consent Banner Script -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (!localStorage.getItem("cookie_consent")) {
                 const banner = document.createElement("div");
                 banner.innerHTML = `
-                    <div style="position:fixed;bottom:0;width:100%;background:#065f46;color:white;padding:15px;text-align:center;z-index:9999;">
-                        This website uses cookies to improve performance and track affiliate links.
-                        <button id="acceptCookies" style="margin-left:15px;padding:6px 12px;background:white;color:#065f46;border:none;border-radius:6px;">
+                    <div class="fixed bottom-0 w-full bg-emerald-700 text-white p-4 text-center z-50 flex flex-col sm:flex-row justify-center items-center gap-4">
+                        <span>This website uses cookies to improve performance and track affiliate links.</span>
+                        <button id="acceptCookies" class="px-4 py-2 bg-white text-emerald-700 rounded-lg hover:bg-gray-100 transition">
                             Accept
                         </button>
                     </div>
