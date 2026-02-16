@@ -49,3 +49,16 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+class AffiliateClick(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="clicks")
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    user_agent = models.TextField(blank=True, null=True)
+    session_key = models.CharField(max_length=40, blank=True, null=True)
+    clicked_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-clicked_at"]
+
+    def __str__(self):
+        return f"Click on {self.post.title}"

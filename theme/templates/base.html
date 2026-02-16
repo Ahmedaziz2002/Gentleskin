@@ -27,31 +27,9 @@
 <body class="bg-stone-50 text-stone-800 font-sans antialiased">
 
     <!-- HEADER -->
-    <header class="bg-white shadow-sm">
+    <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-
-            <!-- Logo + Mobile Layout -->
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-
-                <a href="/" 
-                   class="text-2xl sm:text-3xl lg:text-4xl font-serif font-extrabold text-emerald-700 tracking-tight text-center md:text-left">
-                    Gentle Skin Routine
-                </a>
-
-                <!-- Navigation -->
-                <nav class="flex flex-wrap justify-center md:justify-end gap-4 text-sm sm:text-base">
-                    <a href="/" class="hover:text-emerald-600 transition">Home</a>
-                    <a href="/about/" class="hover:text-emerald-600 transition">About</a>
-
-                    {% for category in categories %}
-                        <a href="{% url 'category_posts' category.slug %}" 
-                           class="hover:text-emerald-600 transition">
-                            {{ category.name }}
-                        </a>
-                    {% endfor %}
-                </nav>
-
-            </div>
+            <!-- ... existing header content ... -->
         </div>
     </header>
 
@@ -69,7 +47,12 @@
             </p>
 
             <p>
-                All content is meant to help you understand skincare routines and products. It is educational and not a substitute for professional medical advice.
+                All content is educational and not a substitute for professional medical advice.
+            </p>
+
+            <!-- Privacy Policy Link -->
+            <p>
+                <a href="{% url 'privacy' %}" class="underline hover:text-emerald-600">Privacy Policy</a>
             </p>
 
             <p class="text-stone-400 text-xs sm:text-sm">
@@ -78,6 +61,39 @@
 
         </div>
     </footer>
+
+    <!-- Hamburger Toggle Script -->
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
+
+    <!-- Cookie Banner Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!localStorage.getItem("cookie_consent")) {
+                const banner = document.createElement("div");
+                banner.innerHTML = `
+                    <div style="position:fixed;bottom:0;width:100%;background:#065f46;color:white;padding:15px;text-align:center;z-index:9999;">
+                        This website uses cookies to improve performance and track affiliate links.
+                        <button id="acceptCookies" style="margin-left:15px;padding:6px 12px;background:white;color:#065f46;border:none;border-radius:6px;">
+                            Accept
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(banner);
+
+                document.getElementById("acceptCookies").onclick = function() {
+                    localStorage.setItem("cookie_consent", "true");
+                    banner.remove();
+                };
+            }
+        });
+    </script>
 
 </body>
 </html>
