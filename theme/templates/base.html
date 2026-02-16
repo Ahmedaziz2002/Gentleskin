@@ -6,52 +6,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Gentle Skin Routine{% endblock %}</title>
+
     <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+
     <meta name="description" content="{% block description %}Evidence-based skincare guidance focused on barrier health and gentle routines.{% endblock %}">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
     <meta property="og:title" content="{% block og_title %}Gentle Skin{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Skincare routines that protect and support your skin barrier.{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}Gentle Skin{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}Calm, protect, strengthen your skin barrier.{% endblock %}">
+
     {% tailwind_css %}
 </head>
+
 <body class="bg-stone-50 text-stone-800 font-sans antialiased">
 
+    <!-- HEADER -->
     <header class="bg-white shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="/" class="text-3xl font-serif font-extrabold text-emerald-700 tracking-tight">
-                Gentle Skin Routine
-            </a>
-            <nav class="space-x-6 text-sm">
-                <a href="/" class="hover:text-emerald-600">Home</a>
-                <a href="/about/" class="hover:text-emerald-600">About</a>
-                {% for category in categories %}
-                    <a href="{% url 'category_posts' category.slug %}" class="hover:text-emerald-600">
-                        {{ category.name }}
-                    </a>
-                {% endfor %}
-            </nav>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+
+            <!-- Logo + Mobile Layout -->
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+
+                <a href="/" 
+                   class="text-2xl sm:text-3xl lg:text-4xl font-serif font-extrabold text-emerald-700 tracking-tight text-center md:text-left">
+                    Gentle Skin Routine
+                </a>
+
+                <!-- Navigation -->
+                <nav class="flex flex-wrap justify-center md:justify-end gap-4 text-sm sm:text-base">
+                    <a href="/" class="hover:text-emerald-600 transition">Home</a>
+                    <a href="/about/" class="hover:text-emerald-600 transition">About</a>
+
+                    {% for category in categories %}
+                        <a href="{% url 'category_posts' category.slug %}" 
+                           class="hover:text-emerald-600 transition">
+                            {{ category.name }}
+                        </a>
+                    {% endfor %}
+                </nav>
+
+            </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-12">
+    <!-- MAIN CONTENT -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-white border-t mt-16">
-        <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-stone-600 space-y-2">
+    <!-- FOOTER -->
+    <footer class="bg-white border-t mt-12 sm:mt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-sm text-stone-600 space-y-4">
+
             <p>
                 Some of the links on this website are affiliate links. If you choose to buy through these links, we may earn a small commission. This comes at no extra cost to you.
             </p>
+
             <p>
                 All content is meant to help you understand skincare routines and products. It is educational and not a substitute for professional medical advice.
             </p>
-            <p class="mt-4 text-stone-400">
+
+            <p class="text-stone-400 text-xs sm:text-sm">
                 © {% now "Y" %} Gentle Skin Routine
             </p>
+
         </div>
     </footer>
 
