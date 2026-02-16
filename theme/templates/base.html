@@ -36,8 +36,8 @@
         Gentle Skin Routine
     </a>
 
-    <!-- Desktop Navigation -->
-    <nav class="hidden md:flex items-center gap-6 text-sm sm:text-base">
+    <!-- Desktop Navigation Only -->
+    <nav class="flex items-center gap-6 text-sm sm:text-base">
         <a href="/"
            class="transition hover:text-emerald-600 {% if request.path == '/' %} text-emerald-600 font-semibold {% endif %}">
             Home
@@ -54,43 +54,7 @@
         {% endfor %}
     </nav>
 
-    <!-- Mobile Hamburger -->
-    <div class="md:hidden flex items-center">
-        <button id="menu-btn" class="focus:outline-none">
-            <svg class="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-        </button>
-    </div>
   </div>
-
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 flex flex-col space-y-2 bg-white border-t">
-    <a href="/"
-       class="px-3 py-2 rounded-md transition hover:bg-emerald-50 {% if request.path == '/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
-        Home
-    </a>
-    <a href="/about/"
-       class="px-3 py-2 rounded-md transition hover:bg-emerald-50 {% if request.path == '/about/' %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
-        About
-    </a>
-    {% for category in categories %}
-        <a href="{% url 'category_posts' category.slug %}"
-           class="px-3 py-2 rounded-md transition hover:bg-emerald-50 {% if request.path == category.get_absolute_url %} bg-emerald-50 text-emerald-600 font-semibold {% endif %}">
-            {{ category.name }}
-        </a>
-    {% endfor %}
-  </div>
-
-  <!-- Hamburger Toggle Script -->
-  <script>
-    const btn = document.getElementById('menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    btn.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
-    });
-  </script>
 </header>
 
 <!-- MAIN CONTENT -->
