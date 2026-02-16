@@ -20,8 +20,9 @@
 
     {% if post.affiliate_link %}
         <div class="mt-10 p-6 bg-emerald-50 rounded-2xl text-center shadow-inner">
+            <!-- Affiliate Disclosure -->
             <p class="text-sm text-stone-600 mb-4">
-                This post contains affiliate links.
+                Disclosure: This post contains affiliate links. We may earn a commission if you purchase through these links at no extra cost to you.
             </p>
             <a href="{% url 'affiliate_redirect' post.slug %}" target="_blank"
                class="inline-block bg-emerald-700 text-white px-6 py-3 rounded-xl hover:bg-emerald-800 transition">
