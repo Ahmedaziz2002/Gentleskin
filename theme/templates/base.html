@@ -11,6 +11,22 @@
     <meta name="description" content="{% block description %}Evidence-based skincare guidance focused on barrier health and gentle routines.{% endblock %}">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
     {% tailwind_css %}
+
+    <style>
+        /* Hide default scrollbar */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Active underline animation */
+        .underline-slide {
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            background-color: #10b981; /* emerald-500 */
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+    </style>
 </head>
 
 <body class="bg-stone-50 text-stone-800 font-sans antialiased">
@@ -58,19 +74,65 @@
       </nav>
   </div>
 
-  <!-- ================= STICKY CATEGORY NAVBAR ================= -->
-  <div class="sticky top-full z-40 bg-white shadow-sm border-t border-stone-200">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto scrollbar-hide flex gap-3">
-          {% for category in categories %}
-              <a href="{% url 'category_posts' category.slug %}"
-                 class="flex-shrink-0 px-5 py-2 rounded-full bg-white border border-stone-300
-                        hover:border-emerald-500 hover:text-emerald-600 hover:shadow-sm transition-all duration-200
-                        {% if request.path == category.get_absolute_url %}
-                            text-emerald-600 border-emerald-500 font-semibold
-                        {% endif %}">
-                  {{ category.name }}
-              </a>
-          {% endfor %}
+  <!-- ================= CATEGORY TOGGLE BELOW NAVBAR ================= -->
+  <div class="border-t border-stone-100 bg-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center">
+
+          <button id="categoryBtn"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-full 
+                     bg-emerald-600 text-white font-medium 
+                     shadow-md hover:bg-emerald-700 hover:shadow-lg transition-all duration-300">
+
+              Browse Categories
+
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="w-4 h-4 transition-transform duration-300"
+                   id="categoryArrow"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 9l-7 7-7-7" />
+              </svg>
+          </button>
+
+      </div>
+
+      <!-- Horizontal Scrollable Categories -->
+      <div id="categoryPanel"
+           class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out border-t border-stone-200 bg-stone-50 relative">
+
+          <div class="max-w-6xl mx-auto px-6 py-4 relative flex items-center">
+              <!-- Left Scroll Button -->
+              <button id="scrollLeft" class="hidden absolute left-0 z-20 bg-white p-2 rounded-full shadow hover:bg-emerald-50 transition">
+                  <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+              </button>
+
+              <!-- Categories Container -->
+              <div id="categoryContainer" class="overflow-x-auto scrollbar-hide flex gap-4 w-full">
+                  {% for category in categories %}
+                      <a href="{% url 'category_posts' category.slug %}"
+                         class="whitespace-nowrap px-6 py-3 rounded-full bg-white border border-stone-300
+                                hover:border-emerald-500 hover:text-emerald-600 hover:shadow-sm
+                                transition-all duration-200
+                                {% if request.path == category.get_absolute_url %} text-emerald-600 border-emerald-500 font-semibold {% endif %}">
+                          {{ category.name }}
+                      </a>
+                  {% endfor %}
+              </div>
+
+              <!-- Right Scroll Button -->
+              <button id="scrollRight" class="hidden absolute right-0 z-20 bg-white p-2 rounded-full shadow hover:bg-emerald-50 transition">
+                  <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+              </button>
+
+              <!-- Active underline -->
+              <span id="underline" class="underline-slide"></span>
+          </div>
       </div>
   </div>
 
@@ -117,26 +179,54 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
         `;
         document.body.appendChild(banner);
-
         document.getElementById("acceptCookies").onclick = function() {
             localStorage.setItem("cookie_consent", "true");
             banner.remove();
         };
     }
 
+    // Category Toggle Panel
+    const categoryBtn = document.getElementById("categoryBtn");
+    const categoryPanel = document.getElementById("categoryPanel");
+    const categoryArrow = document.getElementById("categoryArrow");
+
+    categoryBtn.addEventListener("click", function() {
+        if (categoryPanel.style.maxHeight) {
+            categoryPanel.style.maxHeight = null;
+        } else {
+            categoryPanel.style.maxHeight = categoryPanel.scrollHeight + "px";
+        }
+        categoryArrow.classList.toggle("rotate-180");
+    });
+
+    // Scroll buttons for horizontal categories
+    const container = document.getElementById('categoryContainer');
+    const scrollLeft = document.getElementById('scrollLeft');
+    const scrollRight = document.getElementById('scrollRight');
+
+    const updateButtons = () => {
+        scrollLeft.style.display = container.scrollLeft > 0 ? 'block' : 'none';
+        scrollRight.style.display = container.scrollWidth > container.clientWidth + container.scrollLeft ? 'block' : 'none';
+    };
+    updateButtons();
+    container.addEventListener('scroll', updateButtons);
+    scrollLeft.addEventListener('click', () => container.scrollBy({left: -200, behavior: 'smooth'}));
+    scrollRight.addEventListener('click', () => container.scrollBy({left: 200, behavior: 'smooth'}));
+
+    // Active underline
+    const underline = document.getElementById('underline');
+    const links = container.querySelectorAll('a');
+    const activeLink = container.querySelector('.font-semibold');
+
+    if (activeLink) {
+        const rect = activeLink.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        underline.style.width = rect.width + 'px';
+        underline.style.left = (activeLink.offsetLeft - container.scrollLeft) + 'px';
+    }
+
 });
 </script>
-
-<!-- ================= HIDE SCROLLBAR ================= -->
-<style>
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-</style>
 
 </body>
 </html>
