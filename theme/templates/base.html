@@ -1,7 +1,7 @@
 {% load static %}
 {% load tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,101 +12,135 @@
     <meta name="description" content="{% block description %}Evidence-based skincare guidance focused on barrier health and gentle routines.{% endblock %}">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
-    <meta property="og:title" content="{% block og_title %}Gentle Skin{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Skincare routines that protect and support your skin barrier.{% endblock %}">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}Gentle Skin{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}Calm, protect, strengthen your skin barrier.{% endblock %}">
-
     {% tailwind_css %}
 </head>
 
-<body class="bg-stone-50 text-stone-800 font-sans antialiased">
+<body class="bg-gradient-to-b from-stone-50 via-white to-stone-100 text-stone-800 font-sans antialiased selection:bg-emerald-200 selection:text-emerald-900">
 
-<!-- HEADER / NAVBAR -->
-<header class="bg-white shadow-sm sticky top-0 z-50">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+<!-- HEADER -->
+<header class="sticky top-0 z-50 backdrop-blur-lg bg-white/80 border-b border-stone-200">
+  <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
     <!-- Logo -->
     <a href="/" 
-       class="text-2xl sm:text-3xl font-serif font-extrabold text-emerald-700 tracking-tight">
-        Gentle Skin Routine
+       class="text-2xl sm:text-3xl font-serif font-black tracking-tight text-stone-900 hover:opacity-80 transition">
+        Gentle<span class="text-emerald-600">Skin</span>
     </a>
 
-    <!-- Desktop Navigation Only -->
-    <nav class="flex items-center gap-6 text-sm sm:text-base">
+    <!-- Navigation -->
+    <nav class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide">
+
         <a href="/"
-           class="transition hover:text-emerald-600 {% if request.path == '/' %} text-emerald-600 font-semibold {% endif %}">
+           class="relative pb-1 hover:text-emerald-600 transition
+           {% if request.path == '/' %} text-emerald-600 {% endif %}">
             Home
         </a>
+
         <a href="/about/"
-           class="transition hover:text-emerald-600 {% if request.path == '/about/' %} text-emerald-600 font-semibold {% endif %}">
+           class="relative pb-1 hover:text-emerald-600 transition
+           {% if request.path == '/about/' %} text-emerald-600 {% endif %}">
             About
         </a>
+
         {% for category in categories %}
             <a href="{% url 'category_posts' category.slug %}"
-               class="ml-4 transition hover:text-emerald-600 {% if request.path == category.get_absolute_url %} text-emerald-600 font-semibold {% endif %}">
+               class="hover:text-emerald-600 transition
+               {% if request.path == category.get_absolute_url %} text-emerald-600 {% endif %}">
                 {{ category.name }}
             </a>
         {% endfor %}
+
+        <!-- CTA Button -->
+        <a href="#"
+           class="ml-4 px-4 py-2 rounded-full bg-emerald-600 text-white hover:bg-emerald-700 transition shadow-sm">
+            Best Picks
+        </a>
     </nav>
 
+    <!-- Mobile Button -->
+    <button id="mobileMenuBtn" class="md:hidden text-stone-800 focus:outline-none">
+        ☰
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 space-y-4 bg-white border-t border-stone-200">
+      <a href="/" class="block hover:text-emerald-600">Home</a>
+      <a href="/about/" class="block hover:text-emerald-600">About</a>
+      {% for category in categories %}
+          <a href="{% url 'category_posts' category.slug %}" class="block hover:text-emerald-600">
+              {{ category.name }}
+          </a>
+      {% endfor %}
   </div>
 </header>
 
-<!-- MAIN CONTENT -->
-<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+<!-- MAIN -->
+<main class="max-w-5xl mx-auto px-6 py-16">
+
+    <!-- Subtle Intro Divider -->
+    <div class="h-1 w-20 bg-emerald-500 rounded-full mb-12"></div>
+
     {% block content %}{% endblock %}
+
 </main>
 
 <!-- FOOTER -->
-<footer class="bg-white border-t mt-12 sm:mt-16">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-sm text-stone-600 space-y-4">
+<footer class="mt-24 bg-stone-900 text-stone-300">
+  <div class="max-w-6xl mx-auto px-6 py-14 space-y-6 text-sm">
 
-    <p>
-      Some of the links on this website are affiliate links. If you choose to buy through these links, we may earn a small commission. This comes at no extra cost to you.
+    <h3 class="text-lg font-semibold text-white tracking-wide">
+        Gentle Skin Routine
+    </h3>
+
+    <p class="text-stone-400 leading-relaxed max-w-2xl">
+        Evidence-based skincare recommendations designed to protect your barrier 
+        and simplify your routine.
     </p>
 
-    <p>
-      All content is educational and not a substitute for professional medical advice.
-    </p>
+    <div class="border-t border-stone-700 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-stone-500">
 
-    <!-- Privacy Policy Link -->
-    <p>
-      <a href="{% url 'privacy' %}" class="underline hover:text-emerald-600">Privacy Policy</a>
-    </p>
+        <div>
+            © {% now "Y" %} Gentle Skin Routine
+        </div>
 
-    <p class="text-stone-400 text-xs sm:text-sm">
-      © {% now "Y" %} Gentle Skin Routine
-    </p>
-
+        <div class="flex gap-6">
+            <a href="{% url 'privacy' %}" class="hover:text-white transition">
+                Privacy Policy
+            </a>
+        </div>
+    </div>
   </div>
 </footer>
 
-<!-- Cookie Consent Banner Script -->
+<!-- COOKIE BANNER -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        if (!localStorage.getItem("cookie_consent")) {
-            const banner = document.createElement("div");
-            banner.innerHTML = `
-                <div class="fixed bottom-0 w-full bg-emerald-700 text-white p-4 text-center z-50 flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <span>This website uses cookies to improve performance and track affiliate links.</span>
-                    <button id="acceptCookies" class="px-4 py-2 bg-white text-emerald-700 rounded-lg hover:bg-gray-100 transition">
-                        Accept
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(banner);
+document.addEventListener("DOMContentLoaded", function() {
+    if (!localStorage.getItem("cookie_consent")) {
+        const banner = document.createElement("div");
+        banner.innerHTML = `
+            <div class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white shadow-xl border border-stone-200 rounded-xl px-6 py-4 text-sm flex flex-col sm:flex-row items-center gap-4 z-50 max-w-lg">
+                <span class="text-stone-600">
+                    We use cookies to improve performance and support affiliate tracking.
+                </span>
+                <button id="acceptCookies"
+                    class="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition">
+                    Accept
+                </button>
+            </div>
+        `;
+        document.body.appendChild(banner);
 
-            document.getElementById("acceptCookies").onclick = function() {
-                localStorage.setItem("cookie_consent", "true");
-                banner.remove();
-            };
-        }
-    });
+        document.getElementById("acceptCookies").onclick = function() {
+            localStorage.setItem("cookie_consent", "true");
+            banner.remove();
+        };
+    }
+
+    document.getElementById("mobileMenuBtn").onclick = function() {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+    };
+});
 </script>
 
 </body>
