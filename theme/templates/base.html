@@ -3,30 +3,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Gentle Skin Routine{% endblock %}</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Gentle Skin Routine{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
-    <meta name="description" content="{% block description %}Evidence-based skincare guidance focused on barrier health and gentle routines.{% endblock %}">
-    <link rel="canonical" href="{{ request.build_absolute_uri }}">
-    {% tailwind_css %}
+<link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+<meta name="description" content="{% block description %}Evidence-based skincare guidance focused on barrier health and gentle routines.{% endblock %}">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+{% tailwind_css %}
 
-    <style>
-        /* Hide default scrollbar */
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+<style>
+    /* Hide scrollbars */
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Active underline animation */
-        .underline-slide {
-            position: absolute;
-            bottom: 0;
-            height: 3px;
-            background-color: #10b981; /* emerald-500 */
-            transition: all 0.3s ease;
-            border-radius: 2px;
-        }
-    </style>
+    /* Sliding underline for active category */
+    .underline-slide {
+        position: absolute;
+        bottom: 0;
+        height: 3px;
+        background-color: #10b981; /* emerald-500 */
+        transition: all 0.3s ease;
+        border-radius: 2px;
+    }
+</style>
 </head>
 
 <body class="bg-stone-50 text-stone-800 font-sans antialiased">
@@ -111,13 +111,13 @@
               </button>
 
               <!-- Categories Container -->
-              <div id="categoryContainer" class="overflow-x-auto scrollbar-hide flex gap-4 w-full">
+              <div id="categoryContainer" class="overflow-x-auto scrollbar-hide flex gap-4 w-full relative">
                   {% for category in categories %}
                       <a href="{% url 'category_posts' category.slug %}"
                          class="whitespace-nowrap px-6 py-3 rounded-full bg-white border border-stone-300
-                                hover:border-emerald-500 hover:text-emerald-600 hover:shadow-sm
-                                transition-all duration-200
-                                {% if request.path == category.get_absolute_url %} text-emerald-600 border-emerald-500 font-semibold {% endif %}">
+                                hover:border-emerald-500 hover:text-emerald-600
+                                hover:shadow-sm transition-all duration-200
+                                {% if request.path == category.get_absolute_url %} font-semibold text-emerald-600 border-emerald-500 {% endif %}">
                           {{ category.name }}
                       </a>
                   {% endfor %}
@@ -207,23 +207,31 @@ document.addEventListener("DOMContentLoaded", function() {
     const updateButtons = () => {
         scrollLeft.style.display = container.scrollLeft > 0 ? 'block' : 'none';
         scrollRight.style.display = container.scrollWidth > container.clientWidth + container.scrollLeft ? 'block' : 'none';
+        updateUnderline();
     };
     updateButtons();
     container.addEventListener('scroll', updateButtons);
     scrollLeft.addEventListener('click', () => container.scrollBy({left: -200, behavior: 'smooth'}));
     scrollRight.addEventListener('click', () => container.scrollBy({left: 200, behavior: 'smooth'}));
 
-    // Active underline
+    // Active underline dynamic
     const underline = document.getElementById('underline');
     const links = container.querySelectorAll('a');
     const activeLink = container.querySelector('.font-semibold');
 
-    if (activeLink) {
-        const rect = activeLink.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        underline.style.width = rect.width + 'px';
-        underline.style.left = (activeLink.offsetLeft - container.scrollLeft) + 'px';
+    function updateUnderline() {
+        if (activeLink) {
+            const linkRect = activeLink.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            underline.style.width = linkRect.width + 'px';
+            underline.style.left = (activeLink.offsetLeft - container.scrollLeft) + 'px';
+        }
     }
+
+    // On window resize, recalc underline
+    window.addEventListener('resize', updateUnderline);
+    container.addEventListener('scroll', updateUnderline);
+    updateUnderline();
 
 });
 </script>
