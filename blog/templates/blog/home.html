@@ -4,29 +4,52 @@
 
 {% block content %}
 
-<section class="text-center mb-16 px-4">
-    <h1 class="text-4xl md:text-5xl font-semibold text-emerald-800 mb-6">
+<!-- Hero Section -->
+<section class="text-center mb-20 px-4">
+    <h1 class="text-4xl md:text-5xl font-semibold text-stone-900 mb-6 leading-tight">
         Gentle Skincare for Sensitive & Eczema-Prone Skin
     </h1>
-    <p class="max-w-2xl mx-auto text-lg text-stone-700 leading-relaxed">
+
+    <p class="max-w-2xl mx-auto text-lg text-stone-600 leading-relaxed">
         Discover simple and soothing skincare routines along with carefully chosen product recommendations for dry, sensitive, and eczema-prone skin. Everything we share is designed to make caring for your skin calm and effortless.
     </p>
+
+    <div class="mt-8 w-16 h-1 bg-emerald-600 mx-auto rounded-full"></div>
 </section>
 
-<section class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+<!-- Posts Grid -->
+<section class="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
     {% for post in posts %}
-        <article class="bg-white border border-stone-200 rounded-2xl shadow-md p-6 hover:shadow-lg transition transform hover:-translate-y-0.5">
+        <article class="group bg-white rounded-2xl border border-stone-200 overflow-hidden transition duration-300 hover:shadow-xl hover:-translate-y-1">
+
             {% if post.featured_image %}
-                <img src="{{ post.featured_image.url }}" class="rounded-xl mb-4 w-full h-48 object-cover">
+                <div class="overflow-hidden">
+                    <img src="{{ post.featured_image.url }}"
+                         class="w-full h-52 object-cover transition duration-500 group-hover:scale-105">
+                </div>
             {% endif %}
-            <h2 class="text-xl font-medium mb-2 text-stone-800">
-                <a href="{{ post.get_absolute_url }}" class="hover:text-emerald-600">
-                    {{ post.title }}
-                </a>
-            </h2>
-            <p class="text-base text-stone-700 leading-relaxed">
-                {{ post.excerpt }}
-            </p>
+
+            <div class="p-6 space-y-4">
+
+                <h2 class="text-xl font-semibold text-stone-900 leading-snug">
+                    <a href="{{ post.get_absolute_url }}"
+                       class="hover:text-emerald-600 transition">
+                        {{ post.title }}
+                    </a>
+                </h2>
+
+                <p class="text-stone-600 leading-relaxed text-sm">
+                    {{ post.excerpt }}
+                </p>
+
+                <div>
+                    <a href="{{ post.get_absolute_url }}"
+                       class="inline-block text-sm font-medium text-emerald-700 hover:text-emerald-600 transition">
+                        Read More →
+                    </a>
+                </div>
+
+            </div>
         </article>
     {% empty %}
         <p class="col-span-full text-center text-stone-500">
@@ -35,12 +58,13 @@
     {% endfor %}
 </section>
 
+<!-- Pagination -->
 {% if posts.paginator.num_pages > 1 %}
-<div class="mt-16 flex justify-center items-center space-x-3 px-4">
+<div class="mt-20 flex justify-center items-center gap-6 px-4">
 
     {% if posts.has_previous %}
         <a href="?page={{ posts.previous_page_number }}"
-           class="px-4 py-2 bg-white border border-stone-200 rounded-xl shadow-sm text-sm hover:bg-emerald-50 transition">
+           class="px-5 py-2 bg-white border border-stone-300 rounded-full text-sm hover:bg-emerald-50 hover:border-emerald-400 transition">
             Previous
         </a>
     {% endif %}
@@ -51,7 +75,7 @@
 
     {% if posts.has_next %}
         <a href="?page={{ posts.next_page_number }}"
-           class="px-4 py-2 bg-white border border-stone-200 rounded-xl shadow-sm text-sm hover:bg-emerald-50 transition">
+           class="px-5 py-2 bg-white border border-stone-300 rounded-full text-sm hover:bg-emerald-50 hover:border-emerald-400 transition">
             Next
         </a>
     {% endif %}

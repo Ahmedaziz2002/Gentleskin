@@ -6,28 +6,46 @@
 
 <article class="max-w-3xl mx-auto px-4">
 
-    <h1 class="text-3xl md:text-4xl font-semibold text-emerald-800 mb-6 text-center">
-        {{ post.title }}
-    </h1>
+    <!-- Title -->
+    <header class="text-center mb-12">
+        <h1 class="text-3xl md:text-4xl font-semibold text-stone-900 leading-tight mb-6">
+            {{ post.title }}
+        </h1>
 
+        <div class="w-16 h-1 bg-emerald-600 mx-auto rounded-full"></div>
+    </header>
+
+    <!-- Featured Image -->
     {% if post.featured_image %}
-        <img src="{{ post.featured_image.url }}" class="rounded-2xl mb-8 w-full shadow-md object-cover">
+        <div class="mb-12 overflow-hidden rounded-2xl shadow-lg">
+            <img src="{{ post.featured_image.url }}"
+                 class="w-full object-cover">
+        </div>
     {% endif %}
 
-    <div class="space-y-6 text-stone-700 leading-relaxed text-lg">
+    <!-- Content -->
+    <div class="prose prose-stone max-w-none text-lg leading-relaxed">
         {{ post.content|linebreaks }}
     </div>
 
+    <!-- Affiliate Section -->
     {% if post.affiliate_link %}
-        <div class="mt-10 p-6 bg-emerald-50 rounded-2xl text-center shadow-inner">
-            <!-- Affiliate Disclosure -->
-            <p class="text-sm text-stone-600 mb-4">
-                Disclosure: This post contains affiliate links. We may earn a commission if you purchase through these links at no extra cost to you.
+        <div class="mt-16 border border-stone-200 rounded-2xl p-8 bg-white shadow-sm text-center">
+
+            <h3 class="text-lg font-semibold text-stone-900 mb-4">
+                Recommended Product
+            </h3>
+
+            <p class="text-sm text-stone-500 mb-6 max-w-xl mx-auto">
+                This article includes affiliate links. If you choose to purchase through them,
+                we may earn a small commission at no additional cost to you.
             </p>
+
             <a href="{% url 'affiliate_redirect' post.slug %}" target="_blank"
-               class="inline-block bg-emerald-700 text-white px-6 py-3 rounded-xl hover:bg-emerald-800 transition">
-                View Product
+               class="inline-block px-8 py-3 rounded-full bg-emerald-700 text-white font-medium tracking-wide hover:bg-emerald-800 transition shadow-md">
+                View Product →
             </a>
+
         </div>
     {% endif %}
 
