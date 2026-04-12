@@ -1,6 +1,5 @@
-from .models import Category
+from .selectors import get_navigation_categories
 
-def categories_processor(request):
-    return {
-        "categories": Category.objects.all()
-    }
+
+def site_context(request):
+    return {"categories": get_navigation_categories()}

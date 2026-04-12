@@ -1,64 +1,57 @@
-from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
-from datetime import timedelta
-from .models import Post, Category, AffiliateClick
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from django.views.generic import DetailView, ListView, TemplateView, View
+
+from .models import Post
+from .selectors import get_category_posts, get_home_posts, get_post_detail
+from .services import register_affiliate_click
 
 
-from django.core.paginator import Paginator
+class HomeView(ListView):
+    template_name = "blog/home.html"
+    context_object_name = "posts"
+    paginate_by = 6
 
-def home(request):
-    post_list = Post.objects.filter(status="published")
-    paginator = Paginator(post_list, 6)
+    def get_queryset(self):
+        return Post.objects.none()
 
-    page_number = request.GET.get("page")
-    posts = paginator.get_page(page_number)
-
-    return render(request, "blog/home.html", {"posts": posts})
-
-
-def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug, status="published")
-    return render(request, "blog/post_detail.html", {"post": post})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["posts"] = get_home_posts(self.request.GET.get("page"), self.paginate_by)
+        return context
 
 
-def about(request):
-    return render(request, "blog/about.html")
+class PostDetailView(DetailView):
+    template_name = "blog/post_detail.html"
+    context_object_name = "post"
 
-def category_posts(request, slug):
-    category = get_object_or_404(Category, slug=slug)
-    posts = Post.objects.filter(category=category, status="published")
-    return render(request, "blog/category.html", {
-        "category": category,
-        "posts": posts
-    })
+    def get_object(self, queryset=None):
+        return get_post_detail(self.kwargs["slug"])
 
-def affiliate_redirect(request, slug):
-    post = get_object_or_404(Post, slug=slug, status="published")
 
-    # Ensure session exists
-    if not request.session.session_key:
-        request.session.create()
+class AboutView(TemplateView):
+    template_name = "blog/about.html"
 
-    session_key = request.session.session_key
-    ip_address = request.META.get("REMOTE_ADDR")
-    user_agent = request.META.get("HTTP_USER_AGENT")
 
-    # Check if this user already clicked within 24 hours
-    recent_click = AffiliateClick.objects.filter(
-        post=post,
-        ip_address=ip_address,
-        clicked_at__gte=timezone.now() - timedelta(hours=24)
-    ).exists()
+class CategoryPostListView(TemplateView):
+    template_name = "blog/category.html"
 
-    if not recent_click:
-        AffiliateClick.objects.create(
-            post=post,
-            ip_address=ip_address,
-            user_agent=user_agent,
-            session_key=session_key
-        )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category, posts = get_category_posts(self.kwargs["slug"])
+        context["category"] = category
+        context["posts"] = posts
+        return context
 
-    return redirect(post.affiliate_link)
 
-def privacy_policy(request):
-    return render(request, "privacy.html")
+class AffiliateRedirectView(View):
+    def get(self, request, slug):
+        post = get_post_detail(slug)
+        if not post.affiliate_link:
+            return redirect(post.get_absolute_url())
+        register_affiliate_click(request, post)
+        return HttpResponseRedirect(post.affiliate_link)
+
+
+class PrivacyPolicyView(TemplateView):
+    template_name = "privacy.html"
